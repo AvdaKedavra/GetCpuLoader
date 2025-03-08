@@ -24,7 +24,6 @@
 #include <thread>
 
 static const wchar_t* g_MethodNames[] = {
-    L"FindWordMutch",
     L"TestString",
     L"TestInt",
     L"TestBool",
@@ -33,7 +32,6 @@ static const wchar_t* g_MethodNames[] = {
 };
 
 static const wchar_t* g_MethodNamesRu[] = {
-    L"СравнитьСтроки",
     L"ТестСтрока",
     L"ТестЧисло",
     L"ТестБулево",
@@ -275,22 +273,6 @@ bool CAddInNative::CallAsFunc(const long lMethodNum,
 { 
     switch (lMethodNum)
     {
-    case eFindWordMutch: {
-        // основная логика метода 
-        
-        if (lSizeArray == 2) {
-        
-            wchar_t* convStrA = NULL;
-            wchar_t* convStrB = NULL;
-
-            ::convFromShortWchar(&convStrA, TV_WSTR(&paParams[0]));
-            ::convFromShortWchar(&convStrB, TV_WSTR(&paParams[1]));
-
-            findWordMutch(convStrA, convStrB, pvarRetValue);
-        }
-        return true;
-        break;
-    }
     case eTestString: {
 
         wchar_t* wsCurrentName = NULL;
@@ -466,47 +448,6 @@ long CAddInNative::findName(const wchar_t* names[], const wchar_t* name,
     return ret;
 }
 
-void CAddInNative::findWordMutch(const wchar_t* strA, const wchar_t* strB, tVariant* pvarRetValue) {
-    
-    std::wstring wide_strA(strA);
-
-    // Используем кодировщик для преобразования в std::string
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converterA;
-    std::string convStrAA = converterA.to_bytes(wide_strA);
-
-    std::wstring wide_strB(strB);
-
-    // Используем кодировщик для преобразования в std::string
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converterB;
-    std::string convStrBB = converterB.to_bytes(wide_strB);
-
-    int shingleSize = 3;
-
-    std::unordered_set<std::string> shingles1;
-    for (size_t i = 0; i <= convStrAA.length() - shingleSize; ++i) {
-        shingles1.insert(convStrAA.substr(i, shingleSize)); // Получаем подстроку фиксированной длины
-    }
-
-    std::unordered_set<std::string> shingles2;
-    for (size_t i = 0; i <= convStrBB.length() - shingleSize; ++i) {
-        shingles2.insert(convStrBB.substr(i, shingleSize)); // Получаем подстроку фиксированной длины
-    }
-
-    // Находим пересечение шинглов
-    std::unordered_set<std::string> intersection;
-    for (const auto& shingle : shingles1) {
-        if (shingles2.find(shingle) != shingles2.end()) {
-            intersection.insert(shingle);
-        }
-    }
-
-    // Вычисляем коэффициент схожести
-    double similarity = static_cast<double>(intersection.size()) /
-        (shingles1.size() + shingles2.size() - intersection.size());
-
-    TV_VT(pvarRetValue) = VTYPE_R8;
-    pvarRetValue->dblVal = similarity;
-}
 
 CPULoadMonitor::CPULoadMonitor() : previousTotalTicks(0), previousIdleTicks(0) {}
 

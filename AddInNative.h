@@ -17,7 +17,6 @@ public:
 
     enum Methods
     {
-        eFindWordMutch,
         eTestString,
         eTestInt,
         eTestBool,
@@ -61,7 +60,6 @@ public:
     
 private:
     long findName(const wchar_t* names[], const wchar_t* name, const uint32_t size) const;
-    void findWordMutch(const wchar_t* strA, const wchar_t* strB, tVariant* pvarRetValue);
 
     // Attributes
     IMemoryManager* m_iMemory;
