@@ -24,18 +24,10 @@
 #include <thread>
 
 static const wchar_t* g_MethodNames[] = {
-    L"TestString",
-    L"TestInt",
-    L"TestBool",
-    L"TestDate",
     L"GetCPULoad"
 };
 
 static const wchar_t* g_MethodNamesRu[] = {
-    L"ТестСтрока",
-    L"ТестЧисло",
-    L"ТестБулево",
-    L"ТестДата",
     L"ПолучитьПроцентЗагрузкиПроцессора"
 };
 
@@ -217,16 +209,6 @@ long CAddInNative::GetNParams(const long lMethodNum)
 { 
     switch (lMethodNum)
     {
-    case eFindWordMutch:
-        return 2;
-    case eTestString:
-        return 1;
-    case eTestInt:
-        return 1;
-    case eTestBool:
-        return 1;
-    case eTestDate:
-        return 1;
     default:
         return 0;
     }
@@ -243,16 +225,6 @@ bool CAddInNative::HasRetVal(const long lMethodNum)
 { 
     switch (lMethodNum)
     {
-    case eFindWordMutch:
-        return true;
-    case eTestString:
-        return true;
-    case eTestInt:
-        return true;
-    case eTestBool:
-        return true;
-    case eTestDate:
-        return true;
     case eGetCPULoad:
         return true;
     default:
@@ -273,48 +245,6 @@ bool CAddInNative::CallAsFunc(const long lMethodNum,
 { 
     switch (lMethodNum)
     {
-    case eTestString: {
-
-        wchar_t* wsCurrentName = NULL;
-        size_t iActualSize = 0;
-
-        ::convFromShortWchar(&wsCurrentName, TV_WSTR(&paParams[0]));
-
-        iActualSize = ::wcslen(wsCurrentName) + 1;
-        TV_VT(pvarRetValue) = VTYPE_PWSTR;
-
-        if (m_iMemory->AllocMemory((void**)&pvarRetValue->pwstrVal, iActualSize * sizeof(WCHAR_T)))
-            ::convToShortWchar(&pvarRetValue->pwstrVal, wsCurrentName, iActualSize);
-        pvarRetValue->wstrLen = iActualSize;
-        return true;
-        break;
-    }
-    case eTestInt: {
-
-        int ui = TV_INT_PTR(&paParams[0]);
-        TV_VT(pvarRetValue) = VTYPE_I4;
-        pvarRetValue->lVal = ui;
-
-        return true;
-        break;
-    }
-    case eTestBool: {
-
-        bool ui = TV_BOOL(&paParams[0]);
-        TV_VT(pvarRetValue) = VTYPE_BOOL;
-        pvarRetValue->bVal = ui;
-        return true;
-        break;
-    }
-    case eTestDate: {
-
-        DATE ui = TV_DATE(&paParams[0]);
-        TV_VT(pvarRetValue) = VTYPE_DATE;
-        pvarRetValue->date = ui;
-
-        return true;
-        break;
-    }
     case eGetCPULoad: {
         
         CPULoadMonitor cpuMonitor;

@@ -17,10 +17,6 @@ public:
 
     enum Methods
     {
-        eTestString,
-        eTestInt,
-        eTestBool,
-        eTestDate,
         eGetCPULoad,
         eLastMethod      // Always last
     };
