@@ -104,7 +104,7 @@ void CAddInNative::Done()
 //---------------------------------------------------------------------------//
 bool CAddInNative::RegisterExtensionAs(WCHAR_T** wsExtensionName)
 { 
-    const wchar_t* wsExtension = L"FindsWordMutch";
+    const wchar_t* wsExtension = L"GetParamsLoadPC";
     size_t iActualSize = ::wcslen(wsExtension) + 1;
 
     if (m_iMemory)
