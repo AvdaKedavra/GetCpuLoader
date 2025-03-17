@@ -22,6 +22,7 @@
 #include <locale>
 #include <codecvt>
 #include <thread>
+#include <cmath>
 
 static const wchar_t* g_MethodNames[] = {
     L"GetCPULoad"
@@ -248,12 +249,21 @@ bool CAddInNative::CallAsFunc(const long lMethodNum,
     case eGetCPULoad: {
         
         CPULoadMonitor cpuMonitor;
+        float endCpuLoad;
         try {
-
+                
             float cpuLoad = cpuMonitor.GetCPULoad();
 
-            TV_VT(pvarRetValue) = VTYPE_BOOL;
-            pvarRetValue->fltVal = cpuLoad * 100;
+            for (int i = 0; i < 10; i++) {
+
+                float cpuLoad = cpuMonitor.GetCPULoad();
+                endCpuLoad = (cpuLoad * 100.0f);
+
+                Sleep(100);
+            }
+
+            TV_VT(pvarRetValue) = VTYPE_R8;
+            pvarRetValue->dblVal = std::round(endCpuLoad * 100.0) / 100.0;
             return true;
             break;
         }
