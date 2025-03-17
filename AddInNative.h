@@ -56,6 +56,7 @@ public:
     
 private:
     long findName(const wchar_t* names[], const wchar_t* name, const uint32_t size) const;
+    void addError(uint32_t wcode, const wchar_t* source, const wchar_t* descriptor, long code);
 
     // Attributes
     IMemoryManager* m_iMemory;

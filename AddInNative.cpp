@@ -269,7 +269,20 @@ bool CAddInNative::CallAsFunc(const long lMethodNum,
         }
         catch (const std::exception& e) {
             
-            // дописать вывод ошибок
+            const char* err = e.what();
+            size_t len_err = strlen(err) + 1;
+
+            wchar_t* wsMsgBuf = new wchar_t[len_err];
+
+            if (mbstowcs(wsMsgBuf, err, len_err) == static_cast<size_t>(-1)) {
+                
+                addError(ADDIN_E_VERY_IMPORTANT, L"GetParamsLoadPC", L"Conversion error", -1);
+                delete[] wsMsgBuf;
+                return false;
+            }
+
+            addError(ADDIN_E_VERY_IMPORTANT, L"GetParamsLoadPC", wsMsgBuf, -1);
+            delete[] wsMsgBuf;
             return false;
         }
     }
@@ -388,6 +401,21 @@ long CAddInNative::findName(const wchar_t* names[], const wchar_t* name,
     return ret;
 }
 
+void CAddInNative::addError(uint32_t wcode, const wchar_t* source, const wchar_t* descriptor, long code)
+{
+    if (m_iConnect)
+    {
+        WCHAR_T* err = 0;
+        WCHAR_T* descr = 0;
+
+        ::convToShortWchar(&err, source);
+        ::convToShortWchar(&descr, descriptor);
+
+        m_iConnect->AddError(wcode, err, descr, code);
+        delete[] err;
+        delete[] descr;
+    }
+}
 
 CPULoadMonitor::CPULoadMonitor() : previousTotalTicks(0), previousIdleTicks(0) {}
 
